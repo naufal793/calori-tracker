@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kalkulator Kalori & Pelacak Gizi Harian</title>
+    <!-- Hubungkan ke CSS Terpisah -->
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <!-- Container Utama Mirip Mockup Mobile FatSecret -->
+    <main class="phone-container" id="app-root">
+      
+      <!-- ONBOARDING OVERLAY / SETUP (LOGIN) FOR USER METRICS -->
+      <section id="onboarding-overlay" class="onboarding-overlay-setup">
+        <div class="onboarding-card">
+          <!-- Close Button (only shown when editing profile) -->
+          <button type="button" id="onboarding-close-btn" class="onboarding-close-btn" aria-label="Tutup" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          
+          <!-- Step Progress Bar -->
+          <div class="onboarding-progress-bar">
+            <div id="onboarding-progress-indicator" class="onboarding-progress-indicator" style="width: 25%;"></div>
+          </div>
+          
+          <div class="onboarding-steps-container">
+            <!-- STEP 1: NAMA & GENDER -->
+            <div class="onboarding-step active" id="onboarding-step-1">
+              <div class="onboarding-icon-banner">👋</div>
+              <h2 class="onboarding-step-title">Halo! Selamat Datang di PorsiSaku</h2>
+              <p class="onboarding-step-desc">Langkah awal menuju berat badan idealmu. Siapa nama panggilmu?</p>
+              
+              <div class="form-group" style="margin-top: 20px;">
+                <label for="onboarding-name">Nama Lengkap / Panggilan</label>
+                <input type="text" id="onboarding-name" placeholder="Contoh: Budi, Susi, John" required />
+              </div>
+              
+              <div class="form-group" style="margin-top: 16px;">
+                <label>Jenis Kelamin (Penting untuk Rumus Medis)</label>
+                <input type="hidden" id="onboarding-gender" value="male" />
+                <div class="segmented-control" id="onboarding-gender-selectors">
+                  <button type="button" class="segment-btn active" data-value="male">Laki-laki</button>
+                  <button type="button" class="segment-btn" data-value="female">Perempuan</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 2: USIA, BERAT, TINGGI -->
+            <div class="onboarding-step" id="onboarding-step-2">
+              <div class="onboarding-icon-banner">📐</div>
+              <h2 class="onboarding-step-title">Mari Ukur Profil Fisikmu</h2>
+              <p class="onboarding-step-desc">Metabolisme tubuh dasar (BMR) dihitung berdasarkan proporsi tubuhmu secara presisi.</p>
+              
+              <div class="form-grid" style="margin-top: 16px;">
+                <div class="form-group">
+                  <label for="onboarding-age">Usia (Tahun)</label>
+                  <input type="number" id="onboarding-age" value="25" min="1" max="120" required />
+                </div>
+                <div class="form-group">
+                  <label for="onboarding-height">Tinggi Badan (cm)</label>
+                  <input type="number" id="onboarding-height" value="170" min="50" max="250" required />
+                </div>
+                <div class="form-group full-width">
+                  <label for="onboarding-weight">Berat Badan Saat Ini (kg)</label>
+                  <input type="number" id="onboarding-weight" value="70.0" step="0.1" min="10" max="300" required />
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 3: AKTIVITAS & TARGET GOAL -->
+            <div class="onboarding-step" id="onboarding-step-3">
+              <div class="onboarding-icon-banner">🎯</div>
+              <h2 class="onboarding-step-title">Aktivitas & Target Sehat</h2>
+              <p class="onboarding-step-desc">Seberapa sering kamu bergerak dan apa arah gizi berat badanmu?</p>
+              
+              <div class="form-group" style="margin-top: 12px;">
+                <label>Tingkat Frekuensi Olahraga</label>
+                <input type="hidden" id="onboarding-activity" value="rarely" />
+                <div class="activity-cards-grid">
+                  <div class="activity-card" data-value="never">
+                    <span class="activity-card-icon">🛋️</span>
+                    <div class="activity-card-text">
+                      <span class="activity-card-title">Gak Pernah Olahraga</span>
+                      <span class="activity-card-sub">Banyakan duduk, rebahan, atau minim gerak harian</span>
+                    </div>
+                  </div>
+                  <div class="activity-card selected" data-value="rarely">
+                    <span class="activity-card-icon">🚶</span>
+                    <div class="activity-card-text">
+                      <span class="activity-card-title">Jarang Olahraga</span>
+                      <span class="activity-card-sub">Jalan kaki ringan atau olahraga santai 1-3 hari/minggu</span>
+                    </div>
+                  </div>
+                  <div class="activity-card" data-value="often">
+                    <span class="activity-card-icon">🏃</span>
+                    <div class="activity-card-text">
+                      <span class="activity-card-title">Sering Olahraga</span>
+                      <span class="activity-card-sub">Olahraga intens, latihan beban, atau cardio 3-5+ hari/minggu</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pilihan Arah Goal -->
+              <div class="form-group" style="margin-top: 14px;">
+                <label>Rencana Gizi Berat Badan</label>
+                <input type="hidden" id="onboarding-goal" value="maintain" />
+                <div class="segmented-control" id="onboarding-goal-selectors">
+                  <button type="button" class="segment-btn" data-value="deficit">📉 Turunkan</button>
+                  <button type="button" class="segment-btn active" data-value="maintain">⚖️ Stabilkan</button>
+                  <button type="button" class="segment-btn" data-value="surplus">📈 Naikkan</button>
+                </div>
+              </div>
+
+              <!-- Turunnya/Naiknya (Target Weight) -->
+              <div class="form-group" id="onboarding-target-weight-wrapper" style="margin-top: 14px; display: none;">
+                <label id="onboarding-target-weight-label">Mau Turun ke Berapa kg?</label>
+                <div style="position: relative;">
+                  <span id="onboarding-route-hint" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--color-primary-dark); font-size: 0.9rem; pointer-events: none;">Dari 70 kg ke</span>
+                  <input type="number" id="onboarding-target-weight" value="65" step="0.1" style="padding-left: 110px;" required />
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 4: KELUARAN FORMULA MEDIS MIFFLIN -->
+            <div class="onboarding-step" id="onboarding-step-4">
+              <div class="onboarding-icon-banner">📊</div>
+              <h2 class="onboarding-step-title">Kalkulasi Gizi PorsiSakumu</h2>
+              <p class="onboarding-step-desc">Dihitung secara presisi menggunakan formula standar internasional Mifflin-St Jeor.</p>
+              
+              <div class="calculation-result-card">
+                <div class="calc-main-num">
+                  <span class="calc-num-label">REKOMENDASI KALORI HARIAN</span>
+                  <p class="calc-num-value"><span id="onboarding-calc-calories">2.100</span> <span style="font-size: 1.1rem; font-weight: 750; color: var(--color-text-sub);">kkal / hari</span></p>
+                </div>
+
+                <div class="calc-sub-details">
+                  <div class="calc-detail-row">
+                    <span>Metabolisme Dasar (BMR)</span>
+                    <strong id="onboarding-calc-bmr">1.500 kkal</strong>
+                  </div>
+                  <div class="calc-detail-row">
+                    <span>Kebutuhan Aktif (TDEE)</span>
+                    <strong id="onboarding-calc-tdee">2.275 kkal</strong>
+                  </div>
+                  <div class="calc-detail-row" id="onboarding-calc-deficit-info">
+                    <span>Saran Perubahan</span>
+                    <strong id="onboarding-calc-target-change">Turun dari 70kg ke 65kg</strong>
+                  </div>
+                </div>
+
+                <div class="calc-macros-grid">
+                  <div class="calc-macro-box carbs">
+                    <span class="m-label">🍞 Karbo</span>
+                    <strong class="m-val" id="onboarding-calc-carbs">210g</strong>
+                    <span class="m-pct">40%</span>
+                  </div>
+                  <div class="calc-macro-box protein">
+                    <span class="m-label">🥩 Protein</span>
+                    <strong class="m-val" id="onboarding-calc-protein">158g</strong>
+                    <span class="m-pct">30%</span>
+                  </div>
+                  <div class="calc-macro-box fat">
+                    <span class="m-label">🥑 Lemak</span>
+                    <strong class="m-val" id="onboarding-calc-fat">70g</strong>
+                    <span class="m-pct">30%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons Navigation Footer -->
+          <div class="onboarding-buttons-footer">
+            <button type="button" id="onboarding-prev-btn" class="onboarding-nav-btn prev" style="visibility: hidden;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              Kembali
+            </button>
+            <button type="button" id="onboarding-next-btn" class="onboarding-nav-btn next">
+              Lanjut
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+      
+      <!-- HEADER APLIKASI & NAVIGASI TANGGAL -->
+      <header class="app-header" id="app-header">
+        <div class="header-top">
+          <div class="brand">
+            <div class="brand-icon" aria-hidden="true">
+              <!-- SVG Icon Apel/Sehat Hijau -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6c0-1-1-2-3-2H8"/><path d="M12 6a1 1 0 0 1 1-1h1a2 2 0 0 1 2 2"/></svg>
+            </div>
+            <h1>PorsiSaku</h1>
+          </div>
+          <!-- Menu Ringkasan Status -->
+          <div id="user-greeting-pill" style="font-size: 0.75rem; font-weight: 700; color: var(--color-primary); background: var(--color-primary-light); padding: 4px 12px; border-radius: 99px; cursor: pointer; transition: var(--transition-fast);" title="Klik untuk ubah profil">
+            Target Gizi Aktif
+          </div>
+        </div>
+
+        <!-- Date Selektor Fleksibel (Hari Ini / Kemarin / Besok) -->
+        <section class="date-selector" aria-label="Navigasi Tanggal">
+          <button id="prev-date-btn" class="date-btn" aria-label="Hari Sebelumnya">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <span id="current-date" class="current-date">Hari Ini</span>
+          <button id="next-date-btn" class="date-btn" aria-label="Hari Berikutnya">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </section>
+      </header>
+
+      <!-- FEED UTAMA KONTEN -->
+      <div class="app-content" id="app-content">
+        
+        <!-- DASHBOARD UTAMA: RINGKASAN DATA KALORI -->
+        <section class="dashboard-card" id="cal-summary-dashboard" aria-label="Ringkasan Kalori Anda">
+          <div class="calorie-sum-grid">
+            
+            <!-- Sisi Kiri: Target & Makanan -->
+            <div class="cal-equation-side left-side">
+              <div class="cal-side-item">
+                <span class="side-label">Target</span>
+                <span class="side-number" id="target-calories-val">2.000</span>
+                <span class="side-unit">kkal</span>
+              </div>
+              <div class="cal-side-divider">—</div>
+              <div class="cal-side-item">
+                <span class="side-label">Makanan</span>
+                <span class="side-number text-consumed" id="consumed-calories-val">0</span>
+                <span class="side-unit">kkal</span>
+              </div>
+            </div>
+
+            <!-- Sisa Kalori dengan Visual Progress Circle -->
+            <div class="cal-item main-circle">
+              <div class="circle-progress-wrapper2">
+                <svg class="circle-svg2" viewBox="0 0 120 120" style="width: 120px; height: 120px;">
+                  <!-- Latar belakang lingkaran kelabu -->
+                  <circle class="circle-bg" cx="60" cy="60" r="52" style="fill: none; stroke: #F1F5F2; stroke-width: 8;"></circle>
+                  <!-- Bar sisa kalori yang menyusut/mengembang dinamis -->
+                  <circle id="calories-circle-fill" class="circle-fill" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7" style="fill: none; stroke: var(--color-primary); stroke-width: 8; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset 0.35s ease;"></circle>
+                </svg>
+                <div class="circle-text" style="position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                  <span class="label" style="font-size: 0.6rem; font-weight: 850; color: var(--color-text-muted); text-transform: uppercase;">SISA</span>
+                  <span id="remaining-calories-val" class="value" style="font-size: 1.6rem; font-weight: 900; color: var(--color-primary-dark); line-height: 1.1; letter-spacing: -0.03em;">2.000</span>
+                  <span class="unit" style="font-size: 0.6rem; font-weight: 700; color: var(--color-text-muted);">kkal</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sisi Kanan: Olahraga & Sisa Formula -->
+            <div class="cal-equation-side right-side">
+              <div class="cal-side-item">
+                <span class="side-label">Latihan</span>
+                <span class="side-number text-burned" id="burned-calories-val">0</span>
+                <span class="side-unit">kkal</span>
+              </div>
+              <div class="cal-side-divider">=</div>
+              <div class="cal-side-item">
+                <span class="side-label">Status</span>
+                <span class="side-number" id="daily-status-project" style="font-size: 0.72rem; font-weight: 800; color: var(--color-primary-dark); text-align: center; white-space: nowrap;">Seimbang ⚖️</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Horizontal progress bar pembantu -->
+          <div class="calories-bar-container" aria-hidden="true" style="background-color: #F1F5F2; height: 8px; border-radius: 99px; overflow: hidden; margin-bottom: 24px;">
+            <div id="calories-bar-fill" class="calories-bar-fill" style="background-color: var(--color-primary); height: 100%; width: 0%; transition: width 0.35s ease;"></div>
+          </div>
+
+          <!-- MACRONUTRIENTS PROGRESS METER (PROTEIN, KARBO, LEMAK) -->
+          <div class="macros-grid">
+            <!-- Karbohidrat -->
+            <div class="macro-box">
+              <div class="macro-box-header">
+                <span class="macro-name">Karbo</span>
+                <span id="carbs-percentage" class="macro-percentage">0%</span>
+              </div>
+              <div class="macro-progress-bg">
+                <div id="carbs-progress-fill" class="macro-progress-fill carbs"></div>
+              </div>
+              <div class="macro-values">
+                <span id="carbs-val">0g / 200g</span>
+                <span>40%</span>
+              </div>
+            </div>
+
+            <!-- Protein -->
+            <div class="macro-box">
+              <div class="macro-box-header">
+                <span class="macro-name">Protein</span>
+                <span id="protein-percentage" class="macro-percentage">0%</span>
+              </div>
+              <div class="macro-progress-bg">
+                <div id="protein-progress-fill" class="macro-progress-fill protein"></div>
+              </div>
+              <div class="macro-values">
+                <span id="protein-val">0g / 150g</span>
+                <span>30%</span>
+              </div>
+            </div>
+
+            <!-- Lemak -->
+            <div class="macro-box">
+              <div class="macro-box-header">
+                <span class="macro-name">Lemak</span>
+                <span id="fat-percentage" class="macro-percentage">0%</span>
+              </div>
+              <div class="macro-progress-bg">
+                <div id="fat-progress-fill" class="macro-progress-fill fat"></div>
+              </div>
+              <div class="macro-values">
+                <span id="fat-val">0g / 67g</span>
+                <span>30%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- WATER TRACKER INSIDE DASHBOARD CARD -->
+          <div class="water-tracker-container" style="margin-top: 20px; border-top: 1px dashed var(--color-border); padding-top: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="font-weight: 800; font-size: 0.8rem; color: var(--color-primary-dark); display: flex; align-items: center; gap: 6px;">
+                💧 Pelacak Air Harian
+              </span>
+              <span id="water-count-text" style="font-family: var(--font-mono); font-size: 0.72rem; font-weight: 800; color: var(--color-text-sub);">
+                0 / 8 Gelas (0ml)
+              </span>
+            </div>
+            
+            <div style="display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+              <div id="water-cups-grid" style="display: flex; gap: 4px; flex-wrap: wrap; flex: 1; min-height: 28px; align-items: center;">
+                <!-- Dynamic water glasses from JS -->
+              </div>
+              <div style="display: flex; gap: 5px;">
+                <button type="button" id="btn-water-minus" class="water-btn-sm" style="border: 1px solid #93C5FD; background: #EFF6FF; color: #1E40AF; padding: 4px 8px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; cursor: pointer; transition: all var(--transition-fast);">&minus; Gelas</button>
+                <button type="button" id="btn-water-plus" class="water-btn-sm" style="border: 1px solid #1D4ED8; background: #1D4ED8; color: #ffffff; padding: 4px 8px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; cursor: pointer; transition: all var(--transition-fast);">+ Gelas</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PENGATURAN TARGET & TDEE MIFFLIN (COLLAPSIBLE) -->
+        <section class="settings-section" id="settings-section" aria-label="Profil Tubuh dan Kalkulator TDEE">
+          <button class="settings-toggle" id="settings-toggle-btn" aria-expanded="false" aria-controls="settings-content">
+            <span style="display: flex; align-items: center; gap: 8px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+              Sesuaikan Pengukuran Gizi & TDEE
+            </span>
+            <svg class="settings-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          
+          <div class="settings-content" id="settings-content">
+            <form id="settings-form">
+              <div class="form-grid">
+                
+                <!-- Jenis Kelamin / Gender -->
+                <div class="form-group full-width">
+                  <label>Jenis Kelamin</label>
+                  <input type="hidden" id="input-gender" value="male" />
+                  <div class="segmented-control" id="gender-gender-selectors">
+                    <button type="button" class="segment-btn active" data-value="male">Laki-laki</button>
+                    <button type="button" class="segment-btn" data-value="female">Perempuan</button>
+                  </div>
+                </div>
+
+                <!-- Usia -->
+                <div class="form-group">
+                  <label for="input-age">Usia (Tahun)</label>
+                  <input type="number" id="input-age" value="25" min="1" max="120" required />
+                </div>
+
+                <!-- Berat Badan -->
+                <div class="form-group">
+                  <label for="input-weight">Berat Badan (kg)</label>
+                  <input type="number" id="input-weight" value="70" step="0.1" min="10" max="300" required />
+                </div>
+
+                <!-- Tinggi Badan -->
+                <div class="form-group">
+                  <label for="input-height">Tinggi Badan (cm)</label>
+                  <input type="number" id="input-height" value="170" step="1" min="50" max="250" required />
+                </div>
+
+                <!-- Tingkat Aktivitas -->
+                <div class="form-group">
+                  <label for="input-activity">Tingkat Aktivitas</label>
+                  <select id="input-activity">
+                    <option value="sedentary">Sangat jarang olahraga (Sedentary)</option>
+                    <option value="light">Olahraga ringan 1-3 hari/minggu</option>
+                    <option value="moderate" selected>Olahraga sedang 3-5 hari/minggu</option>
+                    <option value="active">Olahraga berat 6-7 hari/minggu</option>
+                  </select>
+                </div>
+
+                <!-- Target Goal Diet -->
+                <div class="form-group full-width">
+                  <label>Target Berat Badan</label>
+                  <input type="hidden" id="input-goal" value="maintain" />
+                  <div class="segmented-control" id="goal-selectors">
+                    <button type="button" class="segment-btn active" data-value="maintain">Menjaga (Jaga)</button>
+                    <button type="button" class="segment-btn" data-value="deficit">Defisit (Turun)</button>
+                    <button type="button" class="segment-btn" data-value="surplus">Surplus (Naik)</button>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn-primary">
+                Hitung & Perbarui Target
+              </button>
+
+              <div style="margin-top: 14px; border-top: 1px dashed var(--color-border); padding-top: 14px; display: flex; flex-direction: column; gap: 6px;">
+                <p style="font-size: 0.72rem; color: var(--color-text-sub); text-align: center; margin: 0;">Atau gunakan panduan interaktif step-by-step:</p>
+                <button type="button" id="btn-retrigger-onboarding" style="width: 100%; border: 1px dashed var(--color-primary); background: var(--color-primary-light); color: var(--color-primary-dark); padding: 10px 12px; font-size: 0.75rem; font-weight: 800; border-radius: 12px; cursor: pointer; transition: var(--transition-fast);">
+                  🔄 Jurnal Setup Profil Interaktif
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- DAFTAR PENCATATAN HARIAN SARAPAN / MAKAN SIANG / DLL -->
+        <section aria-label="Daftar Makanan Harian" style="display: flex; flex-direction: column; gap: 16px;">
+          
+          <!-- 1. SARAPAN -->
+          <article class="meal-section" id="section-sarapan">
+            <div class="meal-header">
+              <div class="meal-title-group">
+                <span class="meal-icon" aria-hidden="true">🍳</span>
+                <h2 class="meal-title">Sarapan</h2>
+              </div>
+              <span id="sarapan-cal" class="meal-summary-cal">0 kkal</span>
+            </div>
+            
+            <div class="meal-macros-summary" aria-hidden="true">
+              <span class="dot-carb">● Karbo: <span id="sarapan-carbs">0g</span></span>
+              <span class="dot-prot">● Protein: <span id="sarapan-protein">0g</span></span>
+              <span class="dot-fat">● Lemak: <span id="sarapan-fat">0g</span></span>
+            </div>
+
+            <!-- List item makanan terkonsumsi -->
+            <div class="food-list" id="sarapan-list">
+              <!-- Terisi otomatis lewat JavaScript -->
+            </div>
+
+            <button type="button" class="add-meal-item-btn" id="add-sarapan-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Tambah Makanan
+            </button>
+          </article>
+
+          <!-- 2. MAKAN SIANG -->
+          <article class="meal-section" id="section-makansiang">
+            <div class="meal-header">
+              <div class="meal-title-group">
+                <span class="meal-icon" aria-hidden="true">🍱</span>
+                <h2 class="meal-title">Makan Siang</h2>
+              </div>
+              <span id="makansiang-cal" class="meal-summary-cal">0 kkal</span>
+            </div>
+
+            <div class="meal-macros-summary" aria-hidden="true">
+              <span class="dot-carb">● Karbo: <span id="makansiang-carbs">0g</span></span>
+              <span class="dot-prot">● Protein: <span id="makansiang-protein">0g</span></span>
+              <span class="dot-fat">● Lemak: <span id="makansiang-fat">0g</span></span>
+            </div>
+
+            <div class="food-list" id="makansiang-list">
+              <!-- Terisi otomatis -->
+            </div>
+
+            <button type="button" class="add-meal-item-btn" id="add-makansiang-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Tambah Makanan
+            </button>
+          </article>
+
+          <!-- 3. MAKAN MALAM -->
+          <article class="meal-section" id="section-makanmalam">
+            <div class="meal-header">
+              <div class="meal-title-group">
+                <span class="meal-icon" aria-hidden="true">🍛</span>
+                <h2 class="meal-title">Makan Malam</h2>
+              </div>
+              <span id="makanmalam-cal" class="meal-summary-cal">0 kkal</span>
+            </div>
+
+            <div class="meal-macros-summary" aria-hidden="true">
+              <span class="dot-carb">● Karbo: <span id="makanmalam-carbs">0g</span></span>
+              <span class="dot-prot">● Protein: <span id="makanmalam-protein">0g</span></span>
+              <span class="dot-fat">● Lemak: <span id="makanmalam-fat">0g</span></span>
+            </div>
+
+            <div class="food-list" id="makanmalam-list">
+              <!-- Terisi otomatis -->
+            </div>
+
+            <button type="button" class="add-meal-item-btn" id="add-makanmalam-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Tambah Makanan
+            </button>
+          </article>
+
+          <!-- 4. CAMILAN -->
+          <article class="meal-section" id="section-camilan">
+            <div class="meal-header">
+              <div class="meal-title-group">
+                <span class="meal-icon" aria-hidden="true">🍪</span>
+                <h2 class="meal-title">Camilan/Snack</h2>
+              </div>
+              <span id="camilan-cal" class="meal-summary-cal">0 kkal</span>
+            </div>
+
+            <div class="meal-macros-summary" aria-hidden="true">
+              <span class="dot-carb">● Karbo: <span id="camilan-carbs">0g</span></span>
+              <span class="dot-prot">● Protein: <span id="camilan-protein">0g</span></span>
+              <span class="dot-fat">● Lemak: <span id="camilan-fat">0g</span></span>
+            </div>
+
+            <div class="food-list" id="camilan-list">
+              <!-- Terisi otomatis -->
+            </div>
+
+            <button type="button" class="add-meal-item-btn" id="add-camilan-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Tambah Makanan
+            </button>
+          </article>
+
+          <!-- 5. OLAHRAGA / LATIHAN -->
+          <article class="meal-section" id="section-olahraga" style="border-left: 4px solid var(--color-primary);">
+            <div class="meal-header">
+              <div class="meal-title-group">
+                <span class="meal-icon" aria-hidden="true">🏃</span>
+                <h2 class="meal-title">Olahraga & Latihan</h2>
+              </div>
+              <span id="olahraga-cal" class="meal-summary-cal" style="color: var(--color-primary); font-weight: 800;">0 kkal Terbakar</span>
+            </div>
+
+            <!-- List item olahraga terkonsumsi -->
+            <div class="food-list" id="olahraga-list">
+              <!-- Terisi otomatis lewat JavaScript -->
+            </div>
+
+            <button type="button" class="add-meal-item-btn" id="add-olahraga-btn" style="border: 1px dashed var(--color-primary); background-color: var(--color-primary-light); color: var(--color-primary-dark); font-weight: 800;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Catat Kalori Latihan / Aktivitas
+            </button>
+          </article>
+        </section>
+
+      </div> <!-- Akhir Scroll Area .app-content -->
+
+      <!-- FLOATING ACTION BUTTON (TAMBAH MAKANAN INSTAN) -->
+      <button id="floating-add-btn" class="floating-add-btn" aria-label="Tambah Makanan Langsung">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+
+      <!-- DRAWER OVERLAY OVERLAY TAMBAH MAKANAN -->
+      <div id="drawer-overlay" class="drawer-overlay" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+        <div class="drawer-container">
+          
+          <div class="drawer-header">
+            <h2 id="drawer-title" class="drawer-title">Tambah Makanan</h2>
+            <button id="close-drawer-btn" class="close-drawer-btn" aria-label="Tutup Panel">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+
+          <div class="drawer-body">
+            
+            <!-- INPUT LIVE SEARCH -->
+            <div class="search-wrapper">
+              <svg class="search-icon-inside" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="search-input" class="search-input" placeholder="Cari nasi, dada ayam, tempe, susu..." aria-label="Cari database makanan harian" />
+            </div>
+
+            <!-- TABS FILTER PENCARIAN GIZI MAKANAN -->
+            <div class="db-tabs">
+              <button type="button" class="db-tab-btn active" data-category="semua">Semua</button>
+              <button type="button" class="db-tab-btn" data-category="protein">Protein</button>
+              <button type="button" class="db-tab-btn" data-category="karbo">Karbo</button>
+              <button type="button" class="db-tab-btn" data-category="camilan">Camilan</button>
+              <button type="button" class="db-tab-btn" data-category="minuman">Minuman</button>
+            </div>
+
+            <!-- SERING DIKONSUMSI (TAP CEPAT) -->
+            <div id="frequent-foods-box" style="margin: 12px 0; padding: 10px; background: #f0fdf4; border: 1px dashed var(--color-primary-border); border-radius: 12px; display: none;">
+              <span style="font-size: 0.68rem; font-weight: 800; color: var(--color-primary-dark); display: block; margin-bottom: 6px; letter-spacing: 0.05em; text-transform: uppercase;">⚡ SERING ANDA KONSUMSI / LAKUKAN</span>
+              <div id="frequent-foods-badges" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <!-- Generated dynamically from LocalStorage -->
+              </div>
+            </div>
+
+            <!-- HASIL DAFTAR DATABASE -->
+            <div id="search-results" class="search-resultsList">
+              <!-- Terisi otomatis ketika mencari atau memfilter -->
+            </div>
+
+            <!-- BARU: CONTAINER PIRING CAMPURAN SAYA (MULTI-SELECT CALCULATOR) -->
+            <div id="mixed-plate-panel" style="display: none; margin: 12px 0 16px 0; padding: 16px; background: #f0fdf4; border: 1.5px solid var(--color-primary-border); border-radius: 16px; animation: slideUpOnboarding 0.3s ease;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 0.75rem; font-weight: 850; color: var(--color-primary-dark); display: flex; align-items: center; gap: 6px; letter-spacing: 0.02em; text-transform: uppercase;">
+                  🍽️ PIRING CAMPURAN SAYA (<span id="mixed-plate-count" style="font-family: var(--font-mono); font-weight: 900;">0</span> Makanan)
+                </span>
+                <button type="button" id="clear-mixed-plate-btn" style="background: none; border: none; color: #EF4444; font-size: 0.72rem; font-weight: 800; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1">
+                  Hapus Semua 🗑️
+                </button>
+              </div>
+              
+              <div id="mixed-plate-items" style="display: flex; flex-direction: column; gap: 8px; max-height: 180px; overflow-y: auto; margin-bottom: 12px; padding-right: 4px;">
+                <!-- Generated dynamically via JS -->
+              </div>
+              
+              <!-- Total Nutrition Plate Accumulation -->
+              <div style="background: #ffffff; padding: 12px; border-radius: 12px; border: 1.5px solid var(--color-border); margin-bottom: 12px; box-shadow: var(--shadow-sm);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <span style="font-size: 0.68rem; font-weight: 800; color: var(--color-text-sub); text-transform: uppercase;">TOTAL GIZI CAMPURAN:</span>
+                  <span id="mixed-plate-total-cal" style="font-size: 1.2rem; font-weight: 950; color: var(--color-primary-dark); font-family: var(--font-sans);">0 kkal</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-family: var(--font-mono); font-size: 0.65rem; font-weight: 800; text-align: center;">
+                  <div style="background: #fdfdfd; padding: 4px; border-radius: 8px; border: 1px solid var(--color-border);">
+                    <span style="color: #059669; display: block; font-size: 0.6rem;">Karbo</span>
+                    <span id="mixed-plate-total-carbs" style="font-size: 0.75rem; color: var(--color-text-main);">0g</span>
+                  </div>
+                  <div style="background: #fdfdfd; padding: 4px; border-radius: 8px; border: 1px solid var(--color-border);">
+                    <span style="color: var(--color-primary); display: block; font-size: 0.6rem;">Protein</span>
+                    <span id="mixed-plate-total-protein" style="font-size: 0.75rem; color: var(--color-text-main);">0g</span>
+                  </div>
+                  <div style="background: #fdfdfd; padding: 4px; border-radius: 8px; border: 1px solid var(--color-border);">
+                    <span style="color: #D97706; display: block; font-size: 0.6rem;">Lemak</span>
+                    <span id="mixed-plate-total-fat" style="font-size: 0.75rem; color: var(--color-text-main);">0g</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 3fr 2fr; gap: 10px; align-items: center;">
+                <button type="button" id="save-mixed-plate-btn" class="btn-primary" style="margin-top: 0; font-size: 0.8rem; height: 44px; background-color: var(--color-primary-dark); letter-spacing: 0.01em;">
+                  Simpan Campuran Gizi 💾
+                </button>
+                <select id="mixed-plate-meal-select" style="height: 44px; border: 1.5px solid var(--color-border); border-radius: 12px; padding: 0 8px; background-color: #fff; font-weight: 800; font-size: 0.72rem; color: var(--color-text-main); cursor: pointer; outline: none; transition: border-color var(--transition-fast);">
+                  <option value="sarapan">🍳 Sarapan</option>
+                  <option value="makansiang">🍱 Makan Siang</option>
+                  <option value="makanmalam">🍛 Makan Malam</option>
+                  <option value="camilan">🍪 Camilan</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- PILIH PORSI & PENYIMPANAN LOG -->
+            <div id="portion-selector-card" class="portion-selector-card">
+              <div style="border-top: 1.5px dashed var(--color-primary-border); padding-top: 16px;"></div>
+              
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <span id="selected-food-label" style="font-weight: 800; font-size: 1.1rem; color: var(--color-primary-dark);">Nama Makanan</span>
+                <span id="selected-food-detail" style="font-size: 0.75rem; color: var(--color-text-sub);">Gizi porsi standarnya</span>
+              </div>
+
+              <div class="portion-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start;">
+                <div>
+                  <label for="meal-category-select" style="font-size: 0.72rem; font-weight: 800; color: var(--color-text-sub); text-transform: uppercase; letter-spacing: 0.02em;">Kategori / Waktu</label>
+                  <select id="meal-category-select" style="height: 44px; margin-top: 4px; width: 100%; border: 1.5px solid var(--color-border); border-radius: 12px; padding: 0 10px; background-color: #fff; font-weight: 700; color: var(--color-text-main);">
+                    <option value="sarapan">🍳 Sarapan</option>
+                    <option value="makansiang">🍱 Makan Siang</option>
+                    <option value="makanmalam">🍛 Makan Malam</option>
+                    <option value="camilan">🍪 Camilan/Snack</option>
+                    <option value="olahraga">🏃 Olahraga / Aktivitas</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label id="portion-stepper-label" style="display: block; margin-bottom: 4px; text-align: right; font-size: 0.72rem; font-weight: 800; color: var(--color-text-sub); text-transform: uppercase; letter-spacing: 0.02em;">Jumlah Porsi (Servings)</label>
+                  <div class="portion-stepper" style="margin-top: 4px; justify-content: space-between;">
+                    <button type="button" class="step-btn" id="btn-portion-min" aria-label="Kurangi porsi" style="height: 40px; width: 40px;">-</button>
+                    <span id="portion-input" class="step-value" style="font-weight: 800; font-family: var(--font-mono);">1</span>
+                    <button type="button" class="step-btn" id="btn-portion-plus" aria-label="Tambah porsi" style="height: 40px; width: 40px;">+</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- BARU: INPUT BERAT MAKANAN (GRAM) & SEBAGAI PENGHUBUNG DINAMIS -->
+              <div id="portion-gram-row" style="margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: center;">
+                <div>
+                  <label for="portion-gram-input" style="font-size: 0.72rem; font-weight: 800; color: var(--color-text-sub); text-transform: uppercase; letter-spacing: 0.02em;">Atur Berat (Gram / ml)</label>
+                  <div style="display: flex; align-items: center; border: 1.5px solid var(--color-border); border-radius: 12px; background-color: #fff; padding: 0 12px; height: 44px; margin-top: 4px;">
+                    <input type="number" id="portion-gram-input" style="border: none; outline: none; background: transparent; width: 100%; font-family: var(--font-mono); font-size: 0.95rem; font-weight: 800; color: var(--color-primary-dark); padding: 0;" min="1" max="9999" value="100">
+                    <span id="portion-gram-unit-label" style="font-size: 0.75rem; font-weight: 800; color: var(--color-text-muted); text-transform: uppercase; margin-left: 4px;">gr</span>
+                  </div>
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: flex-end; height: 100%; padding-top: 20px;">
+                  <span id="food-base-gram-info" style="font-size: 0.68rem; font-weight: 750; color: var(--color-text-muted); line-height: 1.4; display: block;">
+                    Acuan standar: 100 g per porsi.
+                  </span>
+                </div>
+              </div>
+
+              <!-- BARU: LIVE NUTRITION ESTIMATE PREVIEW CARD (FATSECRET RIVAL) -->
+              <div id="portion-live-preview" style="margin-top: 4px; padding: 14px; background: #f0fdf4; border: 1.5px dashed var(--color-primary-border); border-radius: 16px;">
+                <span id="live-preview-title" style="font-size: 0.65rem; font-weight: 850; color: var(--color-primary-dark); display: block; margin-bottom: 8px; letter-spacing: 0.06em; text-transform: uppercase;">📊 ESTIMASI GIZI AKTIF LOG ANDA</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                  <div style="display: flex; flex-direction: column;">
+                    <span id="live-preview-cal" style="font-size: 1.35rem; font-weight: 900; color: var(--color-primary-dark); line-height: 1.1;">130 kkal</span>
+                    <span id="live-preview-subtitle" style="font-size: 0.68rem; font-weight: 700; color: var(--color-text-sub);">Setara dengan 1 porsi (100g)</span>
+                  </div>
+                  <!-- Mini indicators representing Carbs, Protein, Fat -->
+                  <div style="display: flex; gap: 8px; font-family: var(--font-mono); font-size: 0.65rem; font-weight: 800;">
+                    <div style="display: flex; flex-direction: column; align-items: center; background: #ffffff; padding: 4px 10px; border-radius: 8px; border: 1.5px solid var(--color-border); min-width: 48px; box-shadow: var(--shadow-sm);">
+                      <span style="color: #059669;">Karb</span>
+                      <span id="live-preview-carbs" style="color: var(--color-text-main); font-weight: 800; font-size: 0.72rem; margin-top: 2px;">28g</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; background: #ffffff; padding: 4px 10px; border-radius: 8px; border: 1.5px solid var(--color-border); min-width: 48px; box-shadow: var(--shadow-sm);">
+                      <span style="color: var(--color-primary);">Prot</span>
+                      <span id="live-preview-protein" style="color: var(--color-text-main); font-weight: 800; font-size: 0.72rem; margin-top: 2px;">2.7g</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; background: #ffffff; padding: 4px 10px; border-radius: 8px; border: 1.5px solid var(--color-border); min-width: 48px; box-shadow: var(--shadow-sm);">
+                      <span style="color: #D97706;">Lemak</span>
+                      <span id="live-preview-fat" style="color: var(--color-text-main); font-weight: 800; font-size: 0.72rem; margin-top: 2px;">0.3g</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 10px; margin-top: 10px;">
+                <button type="button" id="add-to-mixed-plate-btn" class="btn-primary" style="margin-top: 0; background-color: #ffffff; color: var(--color-primary-dark); border: 2.2px solid var(--color-primary); font-size: 0.78rem; font-weight: 850; box-shadow: var(--shadow-sm); height: 44px; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all var(--transition-fast);">
+                  🍽️ Campur Sendiri
+                </button>
+                <button type="button" id="save-food-log-btn" class="btn-primary" style="margin-top: 0; font-size: 0.78rem; height: 44px; display: flex; align-items: center; justify-content: center; font-weight: 850;">
+                  Langsung Log ⚡
+                </button>
+              </div>
+            </div>
+
+            <!-- MAKANAN CUSTOM CREATOR (Jika tidak ada di DB) -->
+            <button type="button" id="toggle-custom-form-btn" class="custom-creator-trigger">
+              + Makanan kustom tidak ada di daftar? Buat Sendiri
+            </button>
+
+            <!-- FORM BUAT MAKANAN KUSTOM -->
+            <div id="custom-food-form" class="custom-food-form">
+              <div class="form-group">
+                <label for="custom-name">Nama Makanan Kustom</label>
+                <input type="text" id="custom-name" placeholder="Contoh: Bubur Ayam Spesial" />
+              </div>
+
+              <div class="form-grid" style="margin-top: 0;">
+                <div class="form-group">
+                  <label for="custom-cal">Kalori (Kkal)</label>
+                  <input type="number" id="custom-cal" min="0" placeholder="0" />
+                </div>
+                <div class="form-group">
+                  <label for="custom-carbs">Karbohidrat (g)</label>
+                  <input type="number" id="custom-carbs" min="0" placeholder="0" />
+                </div>
+                <div class="form-group">
+                  <label for="custom-protein">Protein (g)</label>
+                  <input type="number" id="custom-protein" min="0" placeholder="0" />
+                </div>
+                <div class="form-group">
+                  <label for="custom-fat">Lemak (g)</label>
+                  <input type="number" id="custom-fat" min="0" placeholder="0" />
+                </div>
+              </div>
+
+              <button type="button" id="save-custom-food-btn" class="btn-primary" style="margin-top: 8px; background-color: var(--color-text-main);">
+                Buat & Pilih Makanan Kustom
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM NOTIFICATION TOAST -->
+      <div id="notification-toast" style="display: none;" role="status"></div>
+
+      <!-- BOTTOM BRANDING ATTRIBUTION -->
+      <footer class="bottom-attribution">
+        PorsiSaku &copy; 2026 - Pelacak Gizimu dalam Genggaman. <br/>
+        Keamanan Gizi Mifflin-St Jeor &bull; Desain Highly Accessible.
+      </footer>
+
+    </main>
+
+    <!-- Hubungkan ke Logic Murni JavaScript, type="module" didukung modern browser -->
+    <script type="module" src="/app.js" defer></script>
+  </body>
+</html>

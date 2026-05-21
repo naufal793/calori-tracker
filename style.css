@@ -1,0 +1,1506 @@
+/* 
+ * style.css
+ * Tema Desain "Natural Tones" - Polished, Natural, Organic, dan Highly Accessible
+ * Warna dan layout terinspirasi dari hutan alami & tekstur bumi (Forest Greens, Warm Sands & Minty Whites)
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap');
+
+/* CSS Variables & Theme Tokens - Tema Natural Tones */
+:root {
+  --bg-backdrop: #EAECEB;         /* Soft warm gravel/sand gray */
+  --bg-card: #F8FAF9;             /* Organic soft minty off-white */
+  --color-primary: #40916C;       /* Medium Forest Green (Aksesibel & Segar) */
+  --color-primary-dark: #1B4332;  /* Deep Forest Green (Sangat Kontras) */
+  --color-primary-light: #D8F3DC; /* Light Mint Green */
+  --color-primary-border: #B7E4C7;/* Clean minty border */
+  --color-text-main: #1F2937;     /* High Contrast charcoal gray (> 7:1 kontras) */
+  --color-text-sub: #374151;      /* Medium charcoal for descriptions */
+  --color-text-muted: #6B7280;    /* Slate Gray for secondary details */
+  --color-border: #E0E7E1;        /* Soft sage gray border */
+  --color-border-hover: #B7E4C7;  /* Accent hover border */
+  
+  /* Macronutrients Color Tokens */
+  --color-carbs: #3B82F6;         /* Solid Blue for CARBS */
+  --color-carbs-light: #DBEAFE;
+  --color-protein: #52B788;       /* Minty Emerald for PROTEIN */
+  --color-protein-light: #D8F3DC;
+  --color-fat: #F59E0B;           /* Warm Amber for FAT */
+  --color-fat-light: #FEF3C7;
+
+  --color-danger: #EF4444;
+  --color-danger-light: #FEE2E2;
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 10px 25px -5px rgba(27, 67, 50, 0.1), 0 8px 10px -6px rgba(27, 67, 50, 0.05);
+  --shadow-mockup: 0 25px 50px -12px rgba(27, 67, 50, 0.25);
+  
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset / Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-backdrop);
+  color: var(--color-text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: auto; /* Natural scrolling on all devices */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Container Desain Adaptif & Responsif (Semua Device) */
+.phone-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: visible; /* Biarkan mengalir lancar */
+}
+
+/* 1. Tablet View (Sedang): Memperbesar container menjadi kartu elegan */
+@media (min-width: 600px) {
+  .phone-container {
+    width: 92%;
+    max-width: 680px;
+    min-height: calc(100vh - 48px);
+    margin: 24px auto;
+    border-radius: 32px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--color-border);
+  }
+}
+
+/* 2. Desktop View (Lebar): Mengubah orientasi menjadi Bento Grid Dashboard yang sangat mewah */
+@media (min-width: 920px) {
+  .phone-container {
+    max-width: 1200px;
+    width: 90%;
+    margin: 40px auto;
+  }
+  
+  /* Bentukan 2 kolom layout */
+  .app-content {
+    display: grid !important;
+    grid-template-columns: 1fr 1.15fr !important;
+    gap: 32px !important;
+    align-items: start !important;
+    overflow: visible !important;
+    padding-bottom: 40px !important;
+  }
+  
+  /* Kolom Kiri: Dashboard Summary & Pengaturan Gizi */
+  #cal-summary-dashboard {
+    grid-column: 1;
+    position: sticky;
+    top: 24px; /* Menempel saat scroll, UX bintang lima! */
+    z-index: 10;
+  }
+  
+  #settings-section {
+    grid-column: 1;
+    position: sticky;
+    top: 480px; /* Menempel indah di bawah dashboard jika dibuka */
+    z-index: 10;
+  }
+  
+  /* Kolom Kanan: Semua Meal Logs Harian */
+  .app-content > section:last-of-type {
+    grid-column: 2;
+    grid-row: 1 / span 5;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+/* Header Utama Sesuai Desain "Natural Tones" */
+.app-header {
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--color-border);
+  padding: 24px 24px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 20;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-primary-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.brand h1 {
+  font-size: 1.4rem;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  color: var(--color-primary-dark);
+}
+
+/* Date Switcher ala Natural Tones */
+.date-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #F1F5F2; /* Soft clay gray-green */
+  border-radius: 16px;
+  padding: 6px;
+  border: 1px solid var(--color-border);
+}
+
+.date-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-sub);
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.date-btn:hover {
+  background-color: rgba(27, 67, 50, 0.08);
+  color: var(--color-primary-dark);
+}
+
+.date-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+}
+
+.current-date {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--color-primary-dark);
+  letter-spacing: -0.01em;
+}
+
+/* Main Scroll Area dengan custom scrollbar */
+.app-content {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  padding-bottom: 110px; /* Jarak untuk floating action button */
+}
+
+@media (min-width: 600px) {
+  .app-content {
+    overflow-y: visible; /* Biarkan digulir di browser viewport sesungguhnya */
+  }
+}
+
+/* Scrollbar Custom Minimalis */
+.app-content::-webkit-scrollbar {
+  width: 5px;
+}
+.app-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.app-content::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 10px;
+}
+.app-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-border);
+}
+
+/* Dashboard Gizi: Ringkasan Kalori Kartu Alami Putih Bersih */
+.dashboard-card {
+  background: #ffffff;
+  color: var(--color-text-main);
+  border-radius: 32px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.calorie-sum-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.cal-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.cal-item.main-circle {
+  flex: 1.4;
+  position: relative;
+}
+
+.cal-item .label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.cal-item .number {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 750;
+  color: var(--color-primary-dark);
+}
+
+/* Progress Circle Sisa Kalori Besar */
+.circle-progress-wrapper {
+  position: relative;
+  width: 124px;
+  height: 124px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #F1F5F2; /* Soft grey background circle */
+  stroke-width: 10;
+}
+
+.circle-fill {
+  fill: none;
+  stroke: var(--color-primary); /* #40916C */
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset var(--transition-normal);
+}
+
+.circle-fill.over-limit {
+  stroke: var(--color-danger); /* alert jika kelewatan gizi */
+}
+
+.circle-text {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.circle-text .label {
+  font-size: 0.65rem;
+  font-weight: 850;
+  color: var(--color-text-muted);
+  margin-bottom: -2px;
+}
+
+.circle-text .value {
+  font-family: var(--font-sans);
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--color-primary-dark);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.circle-text .unit {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.calc-operator {
+  color: var(--color-text-muted);
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+/* Horizontal Progress Bar Pembantu di Dashboard */
+.calories-bar-container {
+  background-color: #F1F5F2;
+  height: 8px;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.calories-bar-fill {
+  height: 100%;
+  background-color: var(--color-primary);
+  border-radius: 99px;
+  width: 0%;
+  transition: width var(--transition-normal);
+}
+
+.calories-bar-fill.warning {
+  background-color: var(--color-danger);
+}
+
+/* Makronutrisi Tracker Grid */
+.macros-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  border-top: 1px dashed var(--color-border);
+  padding-top: 18px;
+}
+
+.macro-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.macro-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.macro-name {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.macro-percentage {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-text-sub);
+}
+
+.macro-progress-bg {
+  background-color: #F1F5F2;
+  height: 6px;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.macro-progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  width: 0%;
+  transition: width var(--transition-normal);
+}
+
+.macro-progress-fill.carbs { background-color: var(--color-carbs); }
+.macro-progress-fill.protein { background-color: var(--color-protein); }
+.macro-progress-fill.fat { background-color: var(--color-fat); }
+
+.macro-values {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Pengaturan Target Section (Accordion Alami) */
+.settings-section {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-normal);
+}
+
+.settings-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  text-align: left;
+}
+
+.settings-toggle:hover {
+  background-color: rgba(27, 67, 50, 0.03);
+}
+
+.settings-toggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+}
+
+.settings-toggle-icon {
+  color: var(--color-primary);
+  transition: transform var(--transition-normal);
+}
+
+.settings-section.open .settings-toggle-icon {
+  transform: rotate(180deg);
+}
+
+.settings-content {
+  display: none;
+  padding: 0 20px 20px 20px;
+  border-top: 1px solid var(--color-border);
+  background-color: #FAFAFA;
+}
+
+.settings-section.open .settings-content {
+  display: block;
+}
+
+/* Forms layout */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group.full-width {
+  grid-column: span 2;
+}
+
+label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+input, select {
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  height: 46px;
+  padding: 0 14px;
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  color: var(--color-text-main);
+  transition: var(--transition-fast);
+  outline: none;
+  width: 100%;
+}
+
+input:focus, select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(64, 145, 108, 0.15);
+}
+
+/* Segmented Control untuk Laki-laki / Perempuan & Goal */
+.segmented-control {
+  display: flex;
+  background-color: #F1F5F2;
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  gap: 4px;
+}
+
+.segment-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text-sub);
+  border-radius: 9px;
+  transition: var(--transition-fast);
+}
+
+.segment-btn.active {
+  background-color: #ffffff;
+  color: var(--color-primary-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  height: 48px;
+  padding: 0 24px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 800;
+  border-radius: 12px;
+  transition: var(--transition-fast);
+  width: 100%;
+  margin-top: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.btn-primary:focus-visible {
+  outline: 3px solid rgba(64, 145, 108, 0.4);
+}
+
+/* UI Pencatatan Menu Harian (Meal Sections) */
+.meal-section {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 28px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.meal-section:hover {
+  border-color: var(--color-border-hover);
+}
+
+.meal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.meal-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.meal-icon {
+  font-size: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.meal-title {
+  font-size: 1.1rem;
+  font-weight: 850;
+  color: var(--color-primary-dark);
+  letter-spacing: -0.01em;
+}
+
+.meal-summary-cal {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 800;
+  background-color: var(--color-primary-light);
+  padding: 6px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--color-primary-border);
+  color: var(--color-primary-dark);
+}
+
+/* Indikator Makronutrisi per Meal Section */
+.meal-macros-summary {
+  display: flex;
+  gap: 12px;
+  font-size: 0.72rem;
+  font-weight: 750;
+  color: var(--color-text-muted);
+  border-bottom: 1px dashed var(--color-border);
+  padding-bottom: 10px;
+}
+
+.dot-carb::before { content: "● "; color: var(--color-carbs); }
+.dot-prot::before { content: "● "; color: var(--color-protein); }
+.dot-fat::before { content: "● "; color: var(--color-fat); }
+
+/* List Item Makanan Terpilih */
+.food-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.food-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #F8FAF9; /* Soft mint off-white wrapper */
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  transition: var(--transition-fast);
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.food-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  padding-right: 12px;
+}
+
+.food-item-name {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+
+.food-item-portion {
+  font-size: 0.75rem;
+  font-weight: 650;
+  color: var(--color-text-muted);
+}
+
+.food-item-macros {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-text-sub);
+  display: flex;
+  gap: 8px;
+}
+
+.food-item-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.food-item-cal {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+.delete-food-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  transition: var(--transition-fast);
+}
+
+.delete-food-btn:hover {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+/* Empty State */
+.empty-meal-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  font-style: italic;
+  padding: 8px 0;
+  text-align: center;
+}
+
+/* Tambah Makanan Quick Link per Meal */
+.add-meal-item-btn {
+  background: none;
+  border: 1.5px dashed var(--color-primary-border);
+  color: var(--color-primary);
+  height: 44px;
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 750;
+  transition: var(--transition-fast);
+  margin-top: 4px;
+}
+
+.add-meal-item-btn:hover {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+}
+
+/* Overlay / Drawer Terbawah untuk Tambah Makanan */
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(27, 67, 50, 0.45); /* Elegant translucent green-gray backing */
+  backdrop-filter: blur(5px);
+  z-index: 100;
+  display: none;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.drawer-overlay.open {
+  display: flex;
+}
+
+.drawer-container {
+  width: 100%;
+  max-width: 440px; /* Lebar sama dengan mockup phone container */
+  background-color: var(--bg-card);
+  border-top-left-radius: 36px;
+  border-top-right-radius: 36px;
+  max-height: 85vh; /* Membatasi tinggi maksimal agar tidak bablas keluar layar */
+  display: flex;
+  flex-direction: column;
+  animation: slideUp var(--transition-normal);
+  box-shadow: 0 -15px 40px -10px rgba(27, 67, 50, 0.2);
+  overflow: hidden; /* Memastikan element anak yang overflow diatur oleh body */
+}
+
+/* Di layar desktop, sesuaikan drawer supaya memusat seperti modal */
+@media (min-width: 600px) {
+  .drawer-overlay {
+    position: fixed !important;
+    border-radius: 0;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .drawer-container {
+    border-radius: 28px !important;
+    max-width: 500px !important;
+    /* PERBAIKAN: Ubah height dari auto menjadi flex agar max-height bekerja sempurna di desktop */
+    height: 100% !important; 
+    max-height: 80vh !important; /* Batasi maksimal 80% tinggi layar monitor */
+    margin: 20px;
+    animation: fadeInScale var(--transition-normal);
+  }
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.drawer-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  flex-shrink: 0; /* PERBAIKAN: Memastikan header tidak ikut gepeng saat layar mengecil */
+}
+
+.drawer-title {
+  font-size: 1.1rem;
+  font-weight: 850;
+  color: var(--color-primary-dark);
+}
+
+.close-drawer-btn {
+  background-color: #F1F5F2;
+  border: none;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-sub);
+  transition: var(--transition-fast);
+}
+
+.close-drawer-btn:hover {
+  background-color: var(--color-primary-border);
+  color: var(--color-primary-dark);
+}
+
+.drawer-body {
+  padding: 24px;
+  overflow-y: auto; /* Memastikan bagian body ini yang memunculkan scrollbar */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  /* PERBAIKAN: Berikan padding-bottom ekstra di dalam body agar tombol paling bawah memiliki jarak ruang napas */
+  padding-bottom: 40px !important; 
+}
+/* Modul Live Search di Drawer */
+.search-wrapper {
+  position: relative;
+}
+
+.search-input {
+  padding-left: 44px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 14px;
+}
+
+.search-icon-inside {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-primary);
+  pointer-events: none;
+}
+
+/* Filter Tab Kategori Makanan di Drawer */
+.db-tabs {
+  display: flex;
+  background-color: #F1F5F2;
+  border-radius: 12px;
+  padding: 4px;
+  gap: 2x;
+  overflow-x: auto;
+}
+
+/* Sembunyikan scrollbar di chrome/safari untuk tabs */
+.db-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.db-tab-btn {
+  flex: 1;
+  min-width: 60px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  height: 36px;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 750;
+  color: var(--color-text-sub);
+  transition: var(--transition-fast);
+  white-space: nowrap;
+}
+
+.db-tab-btn.active {
+  background-color: white;
+  color: var(--color-primary-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Database Hasil Pencarian di modal */
+.search-resultsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 8px;
+  background-color: #FAFAFA;
+}
+
+.search-result-item {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  background-color: #ffffff;
+}
+
+.search-result-item:hover, .search-result-item.selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.search-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.search-result-name {
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--color-text-main);
+}
+
+.search-result-cal {
+  font-family: var(--font-mono);
+  font-weight: 850;
+  font-size: 0.85rem;
+  color: var(--color-primary-dark);
+}
+
+.search-result-serving {
+  font-size: 0.72rem;
+  font-weight: 650;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.search-result-macros {
+  display: flex;
+  gap: 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-text-sub);
+  margin-top: 6px;
+}
+
+/* Section Porsi / Log Detail */
+.portion-selector-card {
+  border-top: 1px dashed var(--color-border);
+  padding-top: 16px;
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.portion-selector-card.open {
+  display: flex;
+}
+
+.portion-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.portion-stepper {
+  display: flex;
+  align-items: center;
+  background-color: #F1F5F2;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.step-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  font-size: 1.3rem;
+  font-weight: 750;
+  color: var(--color-primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.step-btn:hover {
+  background-color: var(--color-primary-border);
+}
+
+.step-value {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 1rem;
+  width: 50px;
+  text-align: center;
+  color: var(--color-primary-dark);
+}
+
+/* Modul Custom Food Creator */
+.custom-creator-trigger {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 800;
+  padding: 8px;
+}
+
+.custom-creator-trigger:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+.custom-food-form {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  border: 1.5px dashed var(--color-primary-border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 8px;
+  background-color: #ffffff;
+}
+
+.custom-food-form.open {
+  display: flex;
+}
+
+/* Floating Action Button (FAB) */
+.floating-add-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background-color: var(--color-primary-dark);
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  transition: var(--transition-fast);
+  z-index: 90; /* Selalu di atas konten scroll tapi di bawah modal */
+}
+
+.floating-add-btn:hover {
+  background-color: var(--color-primary);
+  transform: scale(1.05);
+}
+
+@media (min-width: 1200px) {
+  .floating-add-btn {
+    right: calc(50% - 600px + 32px); /* Penempatan fantastis presisi di tepi konten bento grid */
+  }
+}
+
+/* Navigasi / Info Tambahan Bawah (Footer) */
+.bottom-attribution {
+  text-align: center;
+  padding: 24px 16px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+  border-top: 1px solid var(--color-border);
+  background-color: #ffffff;
+  margin-top: auto;
+}
+
+/* Responsive adjust untuk mobile asli (Viewport sempit) */
+@media (max-width: 600px) {
+  body {
+    background-color: var(--bg-card);
+  }
+  .phone-container {
+    box-shadow: none;
+  }
+}
+
+/* ==========================================
+ * ONBOARDING WIZARD & SETUP SCREENS
+ * ========================================== */
+.onboarding-overlay-setup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-backdrop);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start; /* Prevents vertical cutoff, scrolls beautifully from start */
+  justify-content: center;
+  padding: 32px 16px;
+  overflow-y: auto;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  -webkit-overflow-scrolling: touch;
+}
+
+.onboarding-overlay-setup.hidden {
+  opacity: 0;
+  pointer-events: none;
+  display: none !important;
+}
+
+.onboarding-card {
+  width: 100%;
+  max-width: 520px;
+  background-color: var(--bg-card);
+  border-radius: 32px;
+  padding: 28px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: visible; /* Changed from hidden to ensure proper layout and animations */
+  margin: auto; /* Vertically and horizontally centers when viewport allows, behaves as flex-start when overflowing */
+  animation: slideUpOnboarding 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.onboarding-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 99px;
+  background-color: #F1F5F2;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-sub);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 15;
+  transition: all var(--transition-fast);
+}
+
+.onboarding-close-btn:hover {
+  background-color: #E2E8E4;
+  color: var(--color-danger);
+  transform: rotate(90deg);
+}
+
+@keyframes slideUpOnboarding {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.onboarding-progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: var(--color-primary-light);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.onboarding-progress-indicator {
+  height: 100%;
+  background-color: var(--color-primary);
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+.onboarding-steps-container {
+  min-height: 310px;
+}
+
+.onboarding-step {
+  display: none;
+  animation: fadeInStep 0.25s ease-out;
+}
+
+.onboarding-step.active {
+  display: block;
+}
+
+@keyframes fadeInStep {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.onboarding-icon-banner {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.onboarding-step-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  text-align: center;
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+.onboarding-step-desc {
+  font-size: 0.88rem;
+  color: var(--color-text-sub);
+  text-align: center;
+  margin-bottom: 22px;
+  line-height: 1.4;
+}
+
+/* Activity selection grid card */
+.activity-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.activity-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  background-color: #ffffff;
+  border: 1.5px solid var(--color-border);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.activity-card:hover {
+  border-color: var(--color-primary-border);
+  background-color: var(--color-primary-light);
+}
+
+.activity-card.selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  box-shadow: 0 0 0 2px var(--color-primary-border);
+}
+
+.activity-card-icon {
+  font-size: 1.6rem;
+}
+
+.activity-card-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-card-title {
+  font-weight: 750;
+  font-size: 0.88rem;
+  color: var(--color-text-main);
+}
+
+.activity-card-sub {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  line-height: 1.3;
+}
+
+/* Calculation Details Card */
+.calculation-result-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.calc-main-num {
+  text-align: center;
+  padding: 12px;
+  background-color: var(--color-primary-light);
+  border-radius: 16px;
+}
+
+.calc-num-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.calc-num-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+.calc-sub-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 1px dashed var(--color-border);
+  padding-bottom: 12px;
+}
+
+.calc-detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--color-text-sub);
+}
+
+.calc-detail-row strong {
+  color: var(--color-text-main);
+  font-weight: 750;
+}
+
+.calc-macros-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.calc-macro-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+}
+
+.calc-macro-box.carbs {
+  background-color: var(--color-carbs-light);
+  border-color: #93C5FD;
+}
+.calc-macro-box.carbs .m-label { color: #1E40AF; }
+
+.calc-macro-box.protein {
+  background-color: var(--color-protein-light);
+  border-color: #6EE7B7;
+}
+.calc-macro-box.protein .m-label { color: #065F46; }
+
+.calc-macro-box.fat {
+  background-color: var(--color-fat-light);
+  border-color: #FCD34D;
+}
+.calc-macro-box.fat .m-label { color: #92400E; }
+
+.m-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.m-val {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+
+.m-pct {
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+/* Onboarding Buttons Footer */
+.onboarding-buttons-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 28px;
+  gap: 12px;
+}
+
+.onboarding-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 14px;
+  font-weight: 750;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.onboarding-nav-btn.prev {
+  background-color: #ffffff;
+  color: var(--color-text-sub);
+  border: 1px solid var(--color-border);
+}
+
+.onboarding-nav-btn.prev:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.onboarding-nav-btn.next {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  flex: 1;
+}
+
+.onboarding-nav-btn.next:hover {
+  background-color: var(--color-primary-dark);
+  box-shadow: var(--shadow-md);
+}
